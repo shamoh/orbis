@@ -11,35 +11,54 @@ const keyFileName = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
 // Instantiates a client
 const datastore = Datastore({
-  projectId: projectId,
-  keyFilename: keyFileName
+    projectId: projectId,
+    keyFilename: keyFileName
 });
 
 // The kind for the new entity
-const kind = 'Task';
-// The name/ID for the new entity
-const name = 'sampletask1';
-// The Cloud Datastore key for the new entity
-// const taskKey = datastore.key([kind, name]);
-const taskKey = datastore.key(name);
+const kind = 'City';
 
-// Prepares the new entity
-const task = {
-  key: taskKey,
-  data: {
-    description: 'Buy milk'
-  }
-};
+/* GET all cities */
+router.get('/', function (req, res) {
+    console.log("Get all cities...");
+    var query = datastore.createQuery(kind);
+    datastore.runQuery(query, function (err, entities, info) {
+        // entities = An array of records.
+        console.log("Error: " + err);
+        console.log("Entities: " + entities);
+        console.log("Info: " + info);
+        res.send(entities);
+    });
+});
+/* GET city(ies) by name */
+router.get('/:name', function (req, res) {
+    var name = req.params.name
+    console.log("Get " + name + " city...");
+    var query = datastore.createQuery(kind);
+    query.filter('name', name);
+    datastore.runQuery(query, function (err, entities, info) {
+        // entities = An array of records.
+        console.log("Error: " + err);
+        console.log("Entities: " + entities);
+        console.log("Info: " + info);
+        res.send(entities);
+    });
+});
+/* POST city */
+router.post('/', function (req, res) {
+    console.log("Register new city...");
+    // Prepares the new entity
+    const entity = {
+        key: datastore.key(kind),
+        data: req.body
+    };
 
-/* GET cities listing. */
-router.get('/', function(req, res) {
-  // Saves the entity
-  console.log(`Saving ${task.key.name}: ${task.data.description}`);
-  datastore.save(task, function(err, entity) {
-    console.log("Error: " + err);
-    console.log("Entity: " + entity);
-  });
-  res.send('respond with a resource');
+    datastore.save(entity, function(err, entity) {
+        console.log("Error: " + err);
+        console.log("Entity: " + entity);
+    });
+
+    res.sendStatus(202);
 });
 
 module.exports = router;
