@@ -1,0 +1,11 @@
+---
+buildName: "github-orbis"
+links:
+  Git: "git@github.com:shamoh/orbis.git"
+  Job: "http://jenkins.default.104.198.97.158.nip.io/job/github-orbis"
+  Production: "http://10.11.252.221:80/kubernetes/pods?namespace=default-production"
+  Staging: "http://10.11.252.221:80/kubernetes/pods?namespace=default-staging"
+environments:
+  Staging: "default-staging"
+  Production: "default-production"
+useLocalFlow: true
