@@ -17,6 +17,17 @@ const datastore = Datastore({
 
 // The kind for the new entity
 const kind = 'City';
+/* Entity sample:
+ {
+ "Country": "cz",
+ "City": "roztoky",
+ "AccentCity": "Roztoky",
+ "Region": "88",
+ "Population": 5910,
+ "Latitude": 50.161771,
+ "Longitude": 14.392392
+ }
+*/
 
 /* GET all cities */
 router.get('/', function (req, res) {
@@ -35,7 +46,7 @@ router.get('/:name', function (req, res) {
     var name = req.params.name
     console.log("Get " + name + " city...");
     var query = datastore.createQuery(kind);
-    query.filter('name', name);
+    query.filter('City', name);
     datastore.runQuery(query, function (err, entities, info) {
         // entities = An array of records.
         console.log("Error: " + err);
